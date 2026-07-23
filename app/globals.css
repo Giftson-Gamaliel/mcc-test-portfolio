@@ -1,26 +1,292 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────
+   DESIGN TOKENS
+───────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Background shades */
+  --bg-base:    #0d1117;
+  --bg-surface: #161b22;
+  --bg-card:    #1e2530;
+  --bg-muted:   #252d3a;
+
+  /* Brand / accent */
+  --accent-1:   #38bdf8;   /* sky-400  – primary  */
+  --accent-2:   #818cf8;   /* indigo-400 – secondary */
+  --accent-glow: rgba(56, 189, 248, 0.15);
+
+  /* Text */
+  --text-primary:   #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted:     #64748b;
+
+  /* Border */
+  --border:     rgba(255, 255, 255, 0.07);
+  --border-hover: rgba(56, 189, 248, 0.35);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg-base);
+  --color-foreground: var(--text-primary);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─────────────────────────────────────────────
+   GLOBAL RESET & BASE
+───────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px; /* offset for sticky navbar */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
+
+/* ─────────────────────────────────────────────
+   SCROLL-IN ANIMATIONS
+───────────────────────────────────────────── */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes subtlePulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+/* Base hidden state — JS adds .visible to trigger animation */
+.animate-section {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.animate-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered children */
+.animate-section.visible .stagger-1 { transition-delay: 0.1s; }
+.animate-section.visible .stagger-2 { transition-delay: 0.2s; }
+.animate-section.visible .stagger-3 { transition-delay: 0.3s; }
+.animate-section.visible .stagger-4 { transition-delay: 0.4s; }
+.animate-section.visible .stagger-5 { transition-delay: 0.5s; }
+
+/* ─────────────────────────────────────────────
+   HERO GRADIENT BACKGROUND
+───────────────────────────────────────────── */
+.hero-bg {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(56, 189, 248, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(129, 140, 248, 0.10) 0%, transparent 65%),
+    var(--bg-base);
+}
+
+/* subtle dot-grid overlay */
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────
+   SECTION HEADING UNDERLINE
+───────────────────────────────────────────── */
+.section-heading {
+  position: relative;
+  display: inline-block;
+  color: var(--text-primary);
+  font-size: 1.875rem;  /* 30px */
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 2.5rem;
+}
+
+.section-heading::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 48px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+}
+
+/* ─────────────────────────────────────────────
+   CARD BASE
+───────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 0 0 1px rgba(56,189,248,0.1), 0 8px 32px rgba(0,0,0,0.35);
+  transform: translateY(-3px);
+}
+
+/* ─────────────────────────────────────────────
+   SKILL TAG
+───────────────────────────────────────────── */
+.skill-tag {
+  background: var(--bg-muted);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  border-radius: 9999px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+}
+
+.skill-tag:hover {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: var(--accent-1);
+  color: var(--accent-1);
+  transform: scale(1.06);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+}
+
+/* ─────────────────────────────────────────────
+   NAVBAR
+───────────────────────────────────────────── */
+.nav-link {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--accent-1);
+  transition: width 0.25s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--accent-1);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* ─────────────────────────────────────────────
+   CHATBOT WIDGET
+───────────────────────────────────────────── */
+.chatbot-widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+/* keep it in-bounds on very small screens */
+@media (max-width: 400px) {
+  .chatbot-widget {
+    bottom: 16px;
+    right: 12px;
+  }
+}
+
+.chatbot-window {
+  width: min(340px, calc(100vw - 48px));
+  max-height: min(480px, calc(100vh - 120px));
+  overflow-y: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─────────────────────────────────────────────
+   ACCENT BUTTON
+───────────────────────────────────────────── */
+.btn-accent {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  color: #0d1117;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.9rem;
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-accent:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(56, 189, 248, 0.35);
+}
+
+/* ─────────────────────────────────────────────
+   CONTACT LINK ITEMS
+───────────────────────────────────────────── */
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-secondary);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-muted);
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.contact-link:hover {
+  border-color: var(--border-hover);
+  color: var(--accent-1);
+  background: rgba(56, 189, 248, 0.06);
+}
+
+/* ─────────────────────────────────────────────
+   SCROLLBAR (webkit)
+───────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 6px; }
+::-webkit-scrollbar-track  { background: var(--bg-base); }
+::-webkit-scrollbar-thumb  { background: var(--bg-muted); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
