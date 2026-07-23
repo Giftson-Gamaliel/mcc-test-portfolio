@@ -45,8 +45,8 @@ const CONTACT_ITEMS = [
       </svg>
     ),
     label: 'LinkedIn',
-    value: '[ADD YOUR LINKEDIN URL]',
-    href: null,
+    value: 'Giftson Gamaliel',
+    href: 'https://www.linkedin.com/in/giftson-gamaliel/',
   },
   {
     icon: (
@@ -55,8 +55,8 @@ const CONTACT_ITEMS = [
       </svg>
     ),
     label: 'GitHub',
-    value: '[ADD YOUR GITHUB URL]',
-    href: null,
+    value: 'Giftson-Gamaliel',
+    href: 'https://github.com/Giftson-Gamaliel',
   },
 ]
 

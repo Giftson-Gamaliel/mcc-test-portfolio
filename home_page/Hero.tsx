@@ -34,7 +34,7 @@ export default function Hero() {
         <p className="text-lg sm:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto mb-10 leading-relaxed">
           Aspiring Software Developer &amp; Data Science Enthusiast
           <span className="mx-2 text-[var(--text-muted)]">·</span>
-          <span className="text-[var(--text-muted)] text-base">Java · Python · SQL</span>
+          <span className="text-[var(--text-muted)] text-base">Java · Python · SQL · C · .NET · HTML/CSS</span>
         </p>
 
         {/* CTAs */}
