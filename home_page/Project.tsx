@@ -57,9 +57,9 @@ export default function Project() {
                   className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border"
                   style={{
                     background: proj.type === 'Internship'
-                      ? 'rgba(56,189,248,0.1)' : 'rgba(129,140,248,0.1)',
+                      ? 'rgba(16,185,129,0.1)' : 'rgba(6,182,212,0.1)',
                     borderColor: proj.type === 'Internship'
-                      ? 'rgba(56,189,248,0.3)' : 'rgba(129,140,248,0.3)',
+                      ? 'rgba(16,185,129,0.3)' : 'rgba(6,182,212,0.3)',
                     color: proj.type === 'Internship'
                       ? 'var(--accent-1)' : 'var(--accent-2)',
                   }}

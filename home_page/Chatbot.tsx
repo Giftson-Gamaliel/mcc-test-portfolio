@@ -72,7 +72,7 @@ export default function Chatbot() {
           {/* Header */}
           <div
             className="flex items-center justify-between px-4 py-3 border-b border-[var(--border)] flex-shrink-0"
-            style={{ background: 'linear-gradient(135deg, rgba(56,189,248,0.08), rgba(129,140,248,0.08))' }}
+            style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.08), rgba(6,182,212,0.08))' }}
           >
             <div className="flex items-center gap-2.5">
               <div className="w-7 h-7 rounded-full flex items-center justify-center text-sm"
@@ -180,7 +180,7 @@ export default function Chatbot() {
           width: '52px',
           height: '52px',
           background: 'linear-gradient(135deg, var(--accent-1), var(--accent-2))',
-          boxShadow: '0 4px 20px rgba(56,189,248,0.35)',
+          boxShadow: '0 4px 20px rgba(16,185,129,0.35)',
         }}
       >
         {open ? (
