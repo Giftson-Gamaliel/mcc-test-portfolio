@@ -5,30 +5,30 @@ import { useScrollReveal } from './useScrollReveal'
 
 const projects = [
   {
+    title: 'Movie Rating Predictor',
+    description:
+      'Built a machine learning model to predict IMDb-style movie ratings from features such as genre, cast popularity, budget, and release year. Applied data cleaning, feature engineering, and trained a Random Forest Regressor achieving strong predictive accuracy. Visualised model insights with Matplotlib and Seaborn.',
+    tags: ['Python', 'Scikit-Learn', 'Random Forest', 'Pandas', 'Matplotlib', 'EDA'],
+    type: 'Project',
+    period: 'Internship – May 2026',
+    link: '#',
+    github: 'https://github.com/Giftson-Gamaliel',
+  },
+  {
     title: 'Data Scientist Intern – Brassy Technologies',
     description:
-      'Assisted in data preprocessing and cleaning of raw datasets using Python to improve data quality. Performed exploratory data analysis (EDA) to identify trends and support data-driven decision-making. Collaborated with the data science team to prepare structured datasets for downstream analytics tasks.',
-    tags: ['Python', 'Data Preprocessing', 'EDA'],
+      'Assisted in data preprocessing and cleaning of raw datasets using Python to improve data quality. Performed EDA to identify trends and support data-driven decision-making. Collaborated with the data science team to prepare structured datasets for downstream analytics.',
+    tags: ['Python', 'Data Preprocessing', 'EDA', 'Pandas', 'NumPy'],
     type: 'Internship',
     period: 'May – Jun 2026',
     link: '#',
     github: '#',
   },
   {
-    title: 'Hands-on Workshop on Internet of Things (IoT)',
+    title: 'Hands-on Workshop – IoT & Robotics',
     description:
-      'Participated in a practical IoT workshop organised by the Department of Computer Science, Madras Christian College, gaining experience with IoT concepts, device connectivity, and data communication.',
-    tags: ['IoT', 'Embedded Systems', 'Networking'],
-    type: 'Workshop',
-    period: 'MCC, Chennai',
-    link: '#',
-    github: '#',
-  },
-  {
-    title: 'Two-Day Workshop on Robotics & IoT',
-    description:
-      'Attended a workshop on Robotics and IoT organised by the Department of Physics (Aided) in collaboration with the Institution\'s Innovation Council (IIC), Madras Christian College, covering robotics design and IoT integration.',
-    tags: ['Robotics', 'IoT', 'Innovation'],
+      'Completed two intensive workshops at MCC on Internet of Things (IoT) and Robotics. Gained practical exposure to device connectivity, sensor integration, data communication protocols, and autonomous robotics design.',
+    tags: ['IoT', 'Robotics', 'Embedded Systems', 'Networking'],
     type: 'Workshop',
     period: 'MCC, Chennai',
     link: '#',
@@ -57,11 +57,20 @@ export default function Project() {
                   className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border"
                   style={{
                     background: proj.type === 'Internship'
-                      ? 'rgba(16,185,129,0.1)' : 'rgba(6,182,212,0.1)',
+                      ? 'rgba(16,185,129,0.1)'
+                      : proj.type === 'Project'
+                      ? 'rgba(6,182,212,0.1)'
+                      : 'rgba(99,102,241,0.1)',
                     borderColor: proj.type === 'Internship'
-                      ? 'rgba(16,185,129,0.3)' : 'rgba(6,182,212,0.3)',
+                      ? 'rgba(16,185,129,0.3)'
+                      : proj.type === 'Project'
+                      ? 'rgba(6,182,212,0.3)'
+                      : 'rgba(99,102,241,0.3)',
                     color: proj.type === 'Internship'
-                      ? 'var(--accent-1)' : 'var(--accent-2)',
+                      ? 'var(--accent-1)'
+                      : proj.type === 'Project'
+                      ? 'var(--accent-2)'
+                      : '#a5b4fc',
                   }}
                 >
                   {proj.type}

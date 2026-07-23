@@ -39,11 +39,12 @@ export default function About() {
           </div>
 
           {/* Quick stats */}
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-4 stagger-3">
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 stagger-3">
             {[
-              { value: '9.2',        label: 'CGPA'             },
-              { value: '2024–27',    label: 'B.Sc. CS, MCC'   },
-              { value: '1 Internship', label: 'Industry Exp.' },
+              { value: '9.2',    label: 'CGPA'            },
+              { value: '2027',   label: 'Graduating'      },
+              { value: '15+',    label: 'Skills'          },
+              { value: '2+',     label: 'Projects/Intern' },
             ].map(stat => (
               <div
                 key={stat.label}

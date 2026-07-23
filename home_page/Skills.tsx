@@ -7,33 +7,48 @@ const SKILL_GROUPS = [
   {
     category: 'Programming Languages',
     icon: '⌨️',
-    skills: ['Java', 'Python', 'C', 'SQL'],
+    skills: ['Python', 'Java', 'C', 'SQL'],
   },
   {
-    category: 'Web Development',
+    category: 'Data Science & ML',
+    icon: '🤖',
+    skills: [
+      'Scikit-Learn',
+      'Pandas',
+      'NumPy',
+      'Matplotlib',
+      'Seaborn',
+      'Random Forest',
+      'EDA',
+      'Feature Engineering',
+    ],
+  },
+  {
+    category: 'Web & Frameworks',
     icon: '🌐',
-    skills: ['HTML', 'CSS'],
+    skills: ['HTML', 'CSS', '.NET Framework', 'Next.js'],
   },
   {
-    category: 'Core CS Concepts',
+    category: 'Tools & Platforms',
+    icon: '🔧',
+    skills: ['Git', 'GitHub', 'VS Code', 'Jupyter Notebook', 'Google Colab'],
+  },
+  {
+    category: 'CS Fundamentals',
     icon: '📐',
     skills: [
+      'Data Structures',
+      'Algorithms',
       'Software Engineering',
       'Operating Systems',
+      'DBMS',
       'Data Mining',
-      'Big Data Analytics',
-      '.NET Framework',
     ],
   },
   {
-    category: 'Tools & Domains',
-    icon: '🔧',
-    skills: [
-      'Data Preprocessing',
-      'Data Analysis',
-      'Internet of Things (IoT)',
-      'Robotics',
-    ],
+    category: 'Domains',
+    icon: '🔬',
+    skills: ['Data Preprocessing', 'Data Analysis', 'IoT', 'Robotics', 'Big Data Analytics'],
   },
 ]
 
@@ -49,7 +64,7 @@ export default function Skills() {
       <div className="max-w-4xl mx-auto">
         <h2 className="section-heading stagger-1">Technical Skills</h2>
 
-        <div className="grid sm:grid-cols-2 gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {SKILL_GROUPS.map((group, gi) => (
             <div
               key={group.category}
