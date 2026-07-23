@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useScrollReveal } from './useScrollReveal'
 
 const CONTACT_ITEMS = [
@@ -62,6 +62,45 @@ const CONTACT_ITEMS = [
 
 export default function Contact() {
   const ref = useScrollReveal<HTMLElement>()
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setStatus('submitting')
+    
+    const url = process.env.NEXT_PUBLIC_FORMSPREE_URL
+    if (!url) {
+      console.error('Formspree URL is not defined in environment variables')
+      setStatus('error')
+      return
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+
+      if (response.ok) {
+        setStatus('success')
+        setFormData({ name: '', email: '', message: '' }) // Reset fields
+      } else {
+        setStatus('error')
+      }
+    } catch (error) {
+      console.error('Form submission error:', error)
+      setStatus('error')
+    }
+  }
 
   return (
     <section
@@ -72,7 +111,89 @@ export default function Contact() {
       <div className="max-w-4xl mx-auto">
         <h2 className="section-heading stagger-1">Get In Touch</h2>
 
-        <div className="grid sm:grid-cols-2 gap-5 stagger-2">
+        {/* Contact Form Above Existing Buttons */}
+        <div className="mb-12 stagger-2">
+          <div className="p-6 sm:p-8 rounded-xl border border-[var(--border)] bg-[var(--bg-card)]">
+            <h3 className="text-xl font-semibold mb-6 text-[var(--text-primary)]">Send me a message</h3>
+            
+            {status === 'success' ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 mx-auto rounded-full bg-[rgba(56,189,248,0.1)] text-[var(--accent-1)] flex items-center justify-center mb-5">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Thanks! I'll get back to you soon.</h3>
+                <button 
+                  onClick={() => setStatus('idle')}
+                  className="mt-6 text-sm text-[var(--text-secondary)] hover:text-[var(--accent-1)] transition-colors"
+                >
+                  Send another message
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Name</label>
+                  <input 
+                    id="name"
+                    type="text" 
+                    name="name" 
+                    required 
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-[var(--bg-base)] border border-[var(--border)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-1)] transition-colors"
+                    placeholder="Your name"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Email</label>
+                  <input 
+                    id="email"
+                    type="email" 
+                    name="email" 
+                    required 
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-[var(--bg-base)] border border-[var(--border)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-1)] transition-colors"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Message</label>
+                  <textarea 
+                    id="message"
+                    name="message" 
+                    required 
+                    rows={4}
+                    value={formData.message}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-[var(--bg-base)] border border-[var(--border)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-1)] transition-colors resize-none"
+                    placeholder="How can I help you?"
+                  />
+                </div>
+
+                {status === 'error' && (
+                  <p className="text-red-400 text-sm mt-1">Oops! There was a problem submitting your form.</p>
+                )}
+
+                <button 
+                  type="submit" 
+                  disabled={status === 'submitting'} 
+                  className="btn-accent mt-2 flex justify-center items-center disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {status === 'submitting' ? 'Sending...' : 'Send Message'}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+
+        {/* Existing Buttons as Fallback */}
+        <div className="grid sm:grid-cols-2 gap-5 stagger-3">
           {CONTACT_ITEMS.map(item => {
             const isPlaceholder = item.value.startsWith('[ADD YOUR')
             const inner = (
@@ -113,7 +234,7 @@ export default function Contact() {
         </div>
 
         {/* Footer note */}
-        <p className="mt-10 text-center text-[var(--text-muted)] text-sm stagger-3">
+        <p className="mt-16 text-center text-[var(--text-muted)] text-sm stagger-4">
           Feel free to reach out — I&apos;m always happy to connect!
         </p>
       </div>

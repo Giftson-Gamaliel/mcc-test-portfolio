@@ -1,9 +1,68 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
+
+interface Message {
+  role: 'user' | 'assistant'
+  content: string
+}
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false)
+  const [messages, setMessages] = useState<Message[]>([
+    { role: 'assistant', content: "👋 Hi! I'm Giftson's AI assistant. Ask me anything about his skills, education, or experience!" }
+  ])
+  const [input, setInput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    if (open) {
+      scrollToBottom()
+    }
+  }, [messages, open, isLoading])
+
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return
+    
+    const userMessage = input.trim()
+    setInput('')
+    setMessages(prev => [...prev, { role: 'user', content: userMessage }])
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/API/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [...messages.map(m => ({ role: m.role, content: m.content })), { role: 'user', content: userMessage }]
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch response')
+      }
+
+      const data = await response.json()
+      
+      setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
+    } catch (error) {
+      console.error(error)
+      setMessages(prev => [...prev, { role: 'assistant', content: "Oops! I encountered an error. Please try again later." }])
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSend()
+    }
+  }
 
   return (
     <div className="chatbot-widget">
@@ -40,31 +99,67 @@ export default function Chatbot() {
             </button>
           </div>
 
-          {/* Body placeholder */}
+          {/* Body */}
           <div className="flex-grow p-4 flex flex-col gap-3 overflow-y-auto">
-            {/* Welcome bubble */}
-            <div
-              className="self-start max-w-[85%] text-sm px-3.5 py-2.5 rounded-2xl rounded-tl-sm leading-relaxed"
-              style={{
-                background: 'var(--bg-muted)',
-                color: 'var(--text-secondary)',
-                border: '1px solid var(--border)',
-              }}
-            >
-              👋 Hi! I&apos;m Giftson&apos;s AI assistant. Ask me anything about his skills, education, or experience!
-            </div>
+            {messages.map((msg, idx) => (
+              <div
+                key={idx}
+                className={`max-w-[85%] text-sm px-3.5 py-2.5 leading-relaxed ${
+                  msg.role === 'assistant' 
+                    ? 'self-start rounded-2xl rounded-tl-sm' 
+                    : 'self-end rounded-2xl rounded-tr-sm'
+                }`}
+                style={
+                  msg.role === 'assistant'
+                    ? {
+                        background: 'var(--bg-muted)',
+                        color: 'var(--text-secondary)',
+                        border: '1px solid var(--border)',
+                      }
+                    : {
+                        background: 'linear-gradient(135deg, var(--accent-1), var(--accent-2))',
+                        color: '#0d1117', // dark text for contrast
+                      }
+                }
+              >
+                {msg.content}
+              </div>
+            ))}
+            
+            {isLoading && (
+              <div
+                className="self-start max-w-[85%] text-sm px-3.5 py-2.5 rounded-2xl rounded-tl-sm leading-relaxed flex items-center gap-1"
+                style={{
+                  background: 'var(--bg-muted)',
+                  color: 'var(--text-secondary)',
+                  border: '1px solid var(--border)',
+                }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--text-secondary)] animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--text-secondary)] animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--text-secondary)] animate-bounce" style={{ animationDelay: '300ms' }}></span>
+              </div>
+            )}
+            
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Input */}
           <div className="flex-shrink-0 flex items-center gap-2 px-3 py-3 border-t border-[var(--border)]">
             <input
               type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              disabled={isLoading}
               placeholder="Ask something…"
-              className="flex-grow text-sm bg-[var(--bg-muted)] border border-[var(--border)] rounded-lg px-3 py-2 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none focus:border-[var(--accent-1)] transition-colors"
+              className="flex-grow text-sm bg-[var(--bg-muted)] border border-[var(--border)] rounded-lg px-3 py-2 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none focus:border-[var(--accent-1)] transition-colors disabled:opacity-50"
             />
             <button
+              onClick={handleSend}
+              disabled={!input.trim() || isLoading}
               aria-label="Send message"
-              className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-opacity hover:opacity-80"
+              className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-opacity hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ background: 'linear-gradient(135deg, var(--accent-1), var(--accent-2))' }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0d1117" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
